@@ -434,3 +434,4 @@ MigrationBackup/
 
 # End of https://www.gitignore.io/api/rider,linux,windows,visualstudio
 .DS_Store
+/src/KafkaFlow.Admin.Dashboard/Properties/launchSettings.json
