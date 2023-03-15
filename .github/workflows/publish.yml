@@ -32,7 +32,7 @@ jobs:
         run: dotnet pack ./src/KafkaFlow.sln -c Release /p:Version=${{ github.event.release.tag_name }} -o ./drop
 
       - name: Publish
-        run: dotnet nuget push ./drop/**/*.nupkg -k ${{ secrets.NUGET_PUBLISH_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push ./drop/**/*.nupkg --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${GITHUB_TOKEN} --skip-duplicate
 
       - name: Print Version
         run: echo ${{ github.event.release.tag_name }}
