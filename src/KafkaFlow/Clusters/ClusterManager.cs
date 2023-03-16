@@ -34,6 +34,7 @@ namespace KafkaFlow.Clusters
             try
             {
                 var topics = configurations
+                    .Distinct()
                     .Select(
                         topicConfiguration => new TopicSpecification
                         {
