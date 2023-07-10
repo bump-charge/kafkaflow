@@ -80,17 +80,19 @@ namespace KafkaFlow.UnitTests
             // Arrange
             var ready = new ManualResetEvent(false);
 
-            var committer = new OffsetCommitter(
+            using var committer = new OffsetCommitter(
                 this.consumerMock.Object,
                 this.dependencyResolverMock.Object,
                 new List<(Action<IDependencyResolver, IEnumerable<TopicPartitionOffset>> handler, TimeSpan interval)>
                 {
-                    ((_, _) => ready.Set(), new TimeSpan(0, 0, 10)),
+                    ((_, _) => ready.Set(), TimeSpan.FromMilliseconds(100)),
                 },
                 this.logHandlerMock.Object);
 
             // Act
             committer.MarkAsProcessed(new TopicPartitionOffset(this.topicPartition, new Offset(1)));
+
+            // Assert
             Assert.IsTrue(ready.WaitOne(TestTimeout));
         }
 
