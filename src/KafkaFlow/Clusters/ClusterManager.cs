@@ -18,9 +18,13 @@ namespace KafkaFlow.Clusters
         {
             this.logHandler = logHandler;
             this.configuration = configuration;
+            var adminConfig = new AdminClientConfig()
+            {
+                BootstrapServers = string.Join(",", configuration.Brokers),
+            };
+            adminConfig.ReadSecurityInformationFrom(configuration);
             this.lazyAdminClientBuilder = new Lazy<AdminClientBuilder>(
-                () => new AdminClientBuilder(new AdminClientConfig
-                { BootstrapServers = string.Join(",", configuration.Brokers) }));
+                () => new AdminClientBuilder(adminConfig));
         }
 
         public string ClusterName => this.configuration.Name;
@@ -30,6 +34,7 @@ namespace KafkaFlow.Clusters
             try
             {
                 var topics = configurations
+                    .Distinct(new DuplicateTopicConfigurationEqualityComparer())
                     .Select(
                         topicConfiguration => new TopicSpecification
                         {
@@ -74,6 +79,13 @@ namespace KafkaFlow.Clusters
                     throw;
                 }
             }
+        }
+
+        private class DuplicateTopicConfigurationEqualityComparer : IEqualityComparer<TopicConfiguration>
+        {
+            public bool Equals(TopicConfiguration x, TopicConfiguration y) => x?.Name == y?.Name;
+
+            public int GetHashCode(TopicConfiguration obj) => obj.Name.GetHashCode();
         }
     }
 }

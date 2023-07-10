@@ -16,6 +16,7 @@ namespace KafkaFlow.Configuration
         private Acks? acks;
         private int statisticsInterval;
         private double? lingerMs;
+        private bool enableIdempotence;
         private ProducerCustomFactory customFactory = (producer, _) => producer;
 
         public ProducerConfigurationBuilder(IDependencyConfigurator dependencyConfigurator, string name)
@@ -64,6 +65,12 @@ namespace KafkaFlow.Configuration
             this.lingerMs = lingerMs;
             return this;
         }
+        
+        public IProducerConfigurationBuilder WithIdempotency(bool enableIdempotence)
+        {
+            this.enableIdempotence = enableIdempotence;
+            return this;
+        }
 
         public IProducerConfigurationBuilder WithStatisticsHandler(Action<string> statisticsHandler)
         {
@@ -89,6 +96,7 @@ namespace KafkaFlow.Configuration
 
             this.producerConfig.StatisticsIntervalMs = this.statisticsInterval;
             this.producerConfig.LingerMs = this.lingerMs;
+            this.producerConfig.EnableIdempotence = this.enableIdempotence;
 
             this.producerConfig.ReadSecurityInformationFrom(clusterConfiguration);
 
