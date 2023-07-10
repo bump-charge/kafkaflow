@@ -63,6 +63,7 @@ namespace KafkaFlow.UnitTests.ConfigurationBuilders
 
             var defaultTopic = this.fixture.Create<string>();
             var acks = this.fixture.Create<KafkaFlow.Acks>();
+            const bool enableIdempotence = true;
             const int lingerMs = 50;
             ProducerCustomFactory customFactory = (producer, _) => producer;
             Action<string> statisticsHandler = _ => { };
@@ -74,6 +75,7 @@ namespace KafkaFlow.UnitTests.ConfigurationBuilders
             this.target
                 .DefaultTopic(defaultTopic)
                 .WithAcks(acks)
+                .WithIdempotency(enableIdempotence)
                 .WithLingerMs(lingerMs)
                 .WithCustomFactory(customFactory)
                 .WithStatisticsHandler(statisticsHandler)
@@ -90,6 +92,7 @@ namespace KafkaFlow.UnitTests.ConfigurationBuilders
             configuration.Name.Should().Be(this.name);
             configuration.DefaultTopic.Should().Be(defaultTopic);
             configuration.Acks.Should().Be(acks);
+            configuration.BaseProducerConfig.EnableIdempotence.Should().Be(enableIdempotence);
             configuration.BaseProducerConfig.LingerMs.Should().Be(lingerMs);
             configuration.BaseProducerConfig.CompressionType.Should().Be(compressionType);
             configuration.BaseProducerConfig.CompressionLevel.Should().Be(compressionLevel);

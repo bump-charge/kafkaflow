@@ -34,6 +34,14 @@ namespace KafkaFlow.Configuration
         IProducerConfigurationBuilder WithAcks(Acks acks);
 
         /// <summary>
+        /// Configures the producer to be idempotent or not.
+        /// When set to true this will ensure that messages are successfully produced exactly once and in the original produce order even if retries occur during message send.
+        /// </summary>
+        /// <param name="enableIdempotence">Idempotence</param>
+        /// <returns></returns>
+        IProducerConfigurationBuilder WithIdempotency(bool enableIdempotence);
+
+        /// <summary>
         /// Delay in milliseconds to wait for messages in the producer queue to accumulate before constructing message batches to transmit to brokers.
         /// A higher value allows larger and more effective (less overhead, improved compression) batches of messages to accumulate at the expense of increased message delivery latency.
         /// default: 0.5 (500 microseconds)
