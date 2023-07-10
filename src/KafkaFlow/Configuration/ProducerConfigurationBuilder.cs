@@ -16,7 +16,7 @@ namespace KafkaFlow.Configuration
         private Acks? acks;
         private int statisticsInterval;
         private double? lingerMs;
-        private bool enableIdempotence;
+        private bool? enableIdempotence;
         private ProducerCustomFactory customFactory = (producer, _) => producer;
 
         public ProducerConfigurationBuilder(IDependencyConfigurator dependencyConfigurator, string name)
